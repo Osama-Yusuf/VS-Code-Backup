@@ -41,7 +41,23 @@ backup_restore() {
             cat extensions.txt | xargs -L 1 code --install-extension
             clear
         }
-        restore_fun
+
+        # check if the extensions.txt is there, if not ask of its location
+        if (ls | grep extensions.txt >/dev/null); then
+            restore_fun
+        else
+            echo "Extensions.txt not found"
+            read -p "Enter the location of extensions.txt: " extensions_txt
+            if [ -f "$extensions_txt" ]; then
+                # echo "Extensions.txt found"
+                restore_fun
+            else
+                echo "Extensions.txt not found"
+                backup_restore
+            fi
+        fi
+        
+
         echo "$count_extensions Extensions restored"
 
         # undo the the extension.txt and rollback to the backup
